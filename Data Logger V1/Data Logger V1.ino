@@ -30,25 +30,25 @@ int pwmInputPin5 = 13;
 bool recording = false;
 
 // All the required functions
-float readCurrent(int pin) {
+float readCurrent(int pin){
   // Read raw value from current sensor
-  if(pin==1)
-  int sensorValue = analogRead(currentSensorPin1);
-  if(pin==2)
-  int sensorValue = analogRead(currentSensorPin2);
-  if(pin==3)
-  int sensorValue = analogRead(currentSensorPin3);
-  if(pin==4)
-  int sensorValue = analogRead(currentSensorPin4);
-  if(pin==5)
-  int sensorValue = analogRead(currentSensorPin5);
+  if (pin == 1)
+    int sensorValue = analogRead(currentSensorPin1);
+  if (pin == 2)
+    int sensorValue = analogRead(currentSensorPin2);
+  if (pin == 3)
+    int sensorValue = analogRead(currentSensorPin3);
+  if (pin == 4)
+    int sensorValue = analogRead(currentSensorPin4);
+  if (pin == 5)
+    int sensorValue = analogRead(currentSensorPin5);
 
   // Convert raw value to current (in amps)
   float current = (sensorValue - 512) * 0.0244;
 
   return current;
 }
-float getBatteryVoltage() {
+float getBatteryVoltage(){
   // Read raw value from voltage divider
   int sensorValue = analogRead(36);
 
@@ -59,17 +59,21 @@ float getBatteryVoltage() {
 }
 
 // Main Code
-void setup() {
+void setup(){
   Serial.begin(115200);
 
   // Initialize sensors
-  if (!mpu.begin(0x68)) {
+  if (!mpu.begin(0x68))
+  {
     Serial.println("Error initializing MPU6050!");
-    while (1);
+    while (1)
+      ;
   }
-  if (!bmp.begin()) {
+  if (!bmp.begin())
+  {
     Serial.println("Error initializing BMP180!");
-    while (1);
+    while (1)
+      ;
   }
 
   // Initialize OLED display
@@ -78,9 +82,11 @@ void setup() {
   display.display();
 
   // Initialize SD card
-  if (!SD.begin(4)) {
+  if (!SD.begin(4))
+  {
     Serial.println("Error initializing SD card!");
-    while (1);
+    while (1)
+      ;
   }
 
   // Set up button pin as an input
@@ -90,7 +96,7 @@ void setup() {
   pinMode(inputPin, INPUT);
 }
 
-void loop() {
+void loop(){
   // Read data from sensors
   sensors_event_t accel, gyro, temp;
   mpu.getEvent(&accel, &gyro, &temp);
@@ -115,19 +121,19 @@ void loop() {
   display.print("Battery: ");
   display.print(getBatteryVoltage());
   display.print("V");
-  if (recording) {
+  if (recording){
     display.setCursor(0, 16);
     display.print("Recording...");
   }
   display.display();
 
   // Check if button is pressed to toggle recording
-  if (digitalRead(buttonPin) == LOW) {
+  if (digitalRead(buttonPin) == LOW){
     recording = !recording;
     delay(200);
   }
 
-  if (recording) {
+  if (recording){
     // Write data to SD card
     dataFile = SD.open("data.csv", FILE_WRITE);
     dataFile.println(pwmValue1);
